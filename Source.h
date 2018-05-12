@@ -14,52 +14,48 @@
 
 namespace queueing {
 
-class Job;
+	class Job;
 
-/**
- * Abstract base class for job generator modules
- */
-class QUEUEING_API SourceBase : public cSimpleModule
-{
-    protected:
-        int jobCounter;
-        std::string jobName;
-        simsignal_t createdSignal;
-    protected:
-        virtual void initialize() override;
-        virtual Job *createJob();
-        virtual void finish() override;
-};
+	/**
+	 * Abstract base class for job generator modules
+	 */
+	class QUEUEING_API SourceBase: public cSimpleModule {
+		protected:
+			int jobCounter;
+			std::string jobName;
+			simsignal_t createdSignal;
+		protected:
+			virtual void initialize() override;
+			virtual Job *createJob();
+			virtual void finish() override;
+	};
 
+	/**
+	 * Generates jobs; see NED file for more info.
+	 */
+	class QUEUEING_API Source: public SourceBase {
+		private:
+			simtime_t startTime;
+			simtime_t stopTime;
+			int numJobs;
 
-/**
- * Generates jobs; see NED file for more info.
- */
-class QUEUEING_API Source : public SourceBase
-{
-    private:
-        simtime_t startTime;
-        simtime_t stopTime;
-        int numJobs;
+		protected:
+			virtual void initialize() override;
+			virtual void handleMessage(cMessage *msg) override;
+	};
 
-    protected:
-        virtual void initialize() override;
-        virtual void handleMessage(cMessage *msg) override;
-};
+	/**
+	 * Generates jobs; see NED file for more info.
+	 */
+	class QUEUEING_API SourceOnce: public SourceBase {
+		protected:
+			virtual void initialize() override;
+			virtual void handleMessage(cMessage *msg) override;
+	};
 
-
-/**
- * Generates jobs; see NED file for more info.
- */
-class QUEUEING_API SourceOnce : public SourceBase
-{
-    protected:
-        virtual void initialize() override;
-        virtual void handleMessage(cMessage *msg) override;
-};
-
-}; //namespace
+}
+;
+//namespace
 
 #endif
-
 

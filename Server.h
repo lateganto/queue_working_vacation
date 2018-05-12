@@ -14,8 +14,8 @@
 
 namespace queueing {
 
-class Job;
-class SelectionStrategy;
+	class Job;
+	class SelectionStrategy;
 
 /**
  * The queue server. It cooperates with several Queues that which queue up
@@ -25,33 +25,34 @@ class SelectionStrategy;
  */
 class QUEUEING_API Server : public cSimpleModule, public IServer
 {
-    private:
-        simsignal_t busySignal;
-        bool allocated;
+	private:
+	simsignal_t busySignal;
+	bool allocated;
 
-        SelectionStrategy *selectionStrategy;
+	SelectionStrategy *selectionStrategy;
 
-        Job *jobServiced;
-        cMessage *endServiceMsg;
+	Job *jobServiced;
+	cMessage *endServiceMsg;
 
-    public:
-        Server();
-        virtual ~Server();
+	public:
+	Server();
+	virtual ~Server();
 
-    protected:
-        virtual void initialize() override;
-        virtual int numInitStages() const override {return 2;}
-        virtual void handleMessage(cMessage *msg) override;
-        virtual void refreshDisplay() const override;
-        virtual void finish() override;
+	protected:
+	virtual void initialize() override;
+	virtual int numInitStages() const override {return 2;}
+	virtual void handleMessage(cMessage *msg) override;
+	virtual void refreshDisplay() const override;
+	virtual void finish() override;
 
-    public:
-        virtual bool isIdle() override;
-        virtual void allocate() override;
+	public:
+	virtual bool isIdle() override;
+	virtual void allocate() override;
 };
 
-}; //namespace
+}
+;
+ //namespace
 
 #endif
-
 

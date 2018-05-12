@@ -14,22 +14,25 @@
 
 namespace queueing {
 
-/**
- * The following interface must be implemented by a queue which can't process
- * jobs on its own. A server process uses these methods to query for new jobs
- * once it becomes idle.
- */
-class QUEUEING_API IPassiveQueue
-{
-    public:
-        virtual ~IPassiveQueue() { };
-        // the current length of the queue
-        virtual int length() = 0;
-        // requests the queue to send out the next job on its "gateIndex" gate.
-        virtual void request(int gateIndex) = 0;
-};
+	/**
+	 * The following interface must be implemented by a queue which can't process
+	 * jobs on its own. A server process uses these methods to query for new jobs
+	 * once it becomes idle.
+	 */
+	class QUEUEING_API IPassiveQueue {
+		public:
+			virtual ~IPassiveQueue() {
+			}
+			;
+			// the current length of the queue
+			virtual int length() = 0;
+			// requests the queue to send out the next job on its "gateIndex" gate.
+			virtual void request(int gateIndex) = 0;
+	};
 
-}; //namespace
+}
+;
+//namespace
 
 #endif
 

@@ -12,85 +12,75 @@
 
 namespace queueing {
 
-void SourceBase::initialize()
-{
-    createdSignal = registerSignal("created");
-    jobCounter = 0;
-    WATCH(jobCounter);
-    jobName = par("jobName").stringValue();
-    if (jobName == "")
-        jobName = getName();
-}
+	void SourceBase::initialize() {
+		createdSignal = registerSignal("created");
+		jobCounter = 0;
+		WATCH(jobCounter);
+		jobName = par("jobName").stringValue();
+		if (jobName == "") jobName = getName();
+	}
 
-Job *SourceBase::createJob()
-{
-    char buf[80];
-    sprintf(buf, "%.60s-%d", jobName.c_str(), ++jobCounter);
-    Job *job = new Job(buf);
-    job->setKind(par("jobType"));
-    job->setPriority(par("jobPriority"));
-    return job;
-}
+	Job *SourceBase::createJob() {
+		char buf[80];
+		sprintf(buf, "%.60s-%d", jobName.c_str(), ++jobCounter);
+		Job *job = new Job(buf);
+		job->setKind(par("jobType"));
+		job->setPriority(par("jobPriority"));
+		return job;
+	}
 
-void SourceBase::finish()
-{
-    emit(createdSignal, jobCounter);
-}
+	void SourceBase::finish() {
+		emit(createdSignal, jobCounter);
+	}
 
 //----
 
-Define_Module(Source);
+	Define_Module(Source);
 
-void Source::initialize()
-{
-    SourceBase::initialize();
-    startTime = par("startTime");
-    stopTime = par("stopTime");
-    numJobs = par("numJobs");
+	void Source::initialize() {
+		SourceBase::initialize();
+		startTime = par("startTime");
+		stopTime = par("stopTime");
+		numJobs = par("numJobs");
 
-    // schedule the first message timer for start time
-    scheduleAt(startTime, new cMessage("newJobTimer"));
-}
+		// schedule the first message timer for start time
+		scheduleAt(startTime, new cMessage("newJobTimer"));
+	}
 
-void Source::handleMessage(cMessage *msg)
-{
-    ASSERT(msg->isSelfMessage());
+	void Source::handleMessage(cMessage *msg) {
+		ASSERT(msg->isSelfMessage());
 
-    if ((numJobs < 0 || numJobs > jobCounter) && (stopTime < 0 || stopTime > simTime())) {
-        // reschedule the timer for the next message
-        scheduleAt(simTime() + par("interArrivalTime").doubleValue(), msg);
+		scheduleAt(simTime() + par("interArrivalTime").doubleValue(), msg);
 
-        Job *job = createJob();
-        send(job, "out");
-    }
-    else {
-        // finished
-        delete msg;
-    }
-}
+		int n = par("numJobsBatch");
+		for (int i = 0; i < n; i++) {
+			Job *job = createJob();
+			send(job, "out");
+		}
+	}
 
 //----
 
-Define_Module(SourceOnce);
+	Define_Module(SourceOnce);
 
-void SourceOnce::initialize()
-{
-    SourceBase::initialize();
-    simtime_t time = par("time");
-    scheduleAt(time, new cMessage("newJobTimer"));
+	void SourceOnce::initialize() {
+		SourceBase::initialize();
+		simtime_t time = par("time");
+		scheduleAt(time, new cMessage("newJobTimer"));
+	}
+
+	void SourceOnce::handleMessage(cMessage *msg) {
+		ASSERT(msg->isSelfMessage());
+		delete msg;
+
+		int n = par("numJobs");
+		for (int i = 0; i < n; i++) {
+			Job *job = createJob();
+			send(job, "out");
+		}
+	}
+
 }
-
-void SourceOnce::handleMessage(cMessage *msg)
-{
-    ASSERT(msg->isSelfMessage());
-    delete msg;
-
-    int n = par("numJobs");
-    for (int i = 0; i < n; i++) {
-        Job *job = createJob();
-        send(job, "out");
-    }
-}
-
-}; //namespace
+;
+//namespace
 

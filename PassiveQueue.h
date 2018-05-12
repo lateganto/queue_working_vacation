@@ -17,40 +17,41 @@
 
 namespace queueing {
 
-class SelectionStrategy;
+	class SelectionStrategy;
 
-/**
- * A passive queue, designed to co-operate with IServer using method calls.
- */
-class QUEUEING_API PassiveQueue : public cSimpleModule, public IPassiveQueue
-{
-    private:
-		simsignal_t droppedSignal;
-		simsignal_t queueLengthSignal;
-		simsignal_t queueingTimeSignal;
+	/**
+	 * A passive queue, designed to co-operate with IServer using method calls.
+	 */
+	class QUEUEING_API PassiveQueue: public cSimpleModule, public IPassiveQueue {
+		private:
+			simsignal_t droppedSignal;
+			simsignal_t queueLengthSignal;
+			simsignal_t queueingTimeSignal;
 
-        bool fifo;
-        int capacity;
-        cQueue queue;
-        SelectionStrategy *selectionStrategy;
+			bool fifo;
+			int capacity;
+			cQueue queue;
+			SelectionStrategy *selectionStrategy;
 
-        void queueLengthChanged();
-        void sendJob(Job *job, int gateIndex);
+			void queueLengthChanged();
+			void sendJob(Job *job, int gateIndex);
 
-    protected:
-        virtual void initialize() override;
-        virtual void handleMessage(cMessage *msg) override;
-        virtual void refreshDisplay() const override;
+		protected:
+			virtual void initialize() override;
+			virtual void handleMessage(cMessage *msg) override;
+			virtual void refreshDisplay() const override;
 
-    public:
-        PassiveQueue();
-        virtual ~PassiveQueue();
-        // The following methods are called from IServer:
-        virtual int length() override;
-        virtual void request(int gateIndex) override;
-};
+		public:
+			PassiveQueue();
+			virtual ~PassiveQueue();
+			// The following methods are called from IServer:
+			virtual int length() override;
+			virtual void request(int gateIndex) override;
+	};
 
-}; //namespace
+}
+;
+//namespace
 
 #endif
 
