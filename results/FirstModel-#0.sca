@@ -1,0 +1,93 @@
+version 2
+run FirstModel-0-20180513-00:15:51-9509
+attr configname FirstModel
+attr datetime 20180513-00:15:51
+attr experiment FirstModel
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network BatchQueueWV
+attr processid 9509
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.fifo true
+param **.interArrivalTime exponential(6.67s)
+
+scalar BatchQueueWV.sink generation:mean 0
+attr interpolationmode none
+attr title "the generation of the arrived jobs, mean"
+scalar BatchQueueWV.sink generation:max 0
+attr interpolationmode none
+attr title "the generation of the arrived jobs, max"
+scalar BatchQueueWV.sink delaysVisited:mean 0
+attr interpolationmode none
+attr title "the total number of delays visited by arrived jobs, mean"
+scalar BatchQueueWV.sink delaysVisited:max 0
+attr interpolationmode none
+attr title "the total number of delays visited by arrived jobs, max"
+scalar BatchQueueWV.sink queuesVisited:mean 0
+attr interpolationmode none
+attr title "the total number of queues visited by arrived jobs, mean"
+scalar BatchQueueWV.sink queuesVisited:max 0
+attr interpolationmode none
+attr title "the total number of queues visited by arrived jobs, max"
+scalar BatchQueueWV.sink totalServiceTime:mean 1
+attr interpolationmode none
+attr title "the total time spent  by arrived jobs, mean"
+attr unit s
+scalar BatchQueueWV.sink totalServiceTime:max 1
+attr interpolationmode none
+attr title "the total time spent  by arrived jobs, max"
+attr unit s
+scalar BatchQueueWV.sink totalDelayTime:mean 0
+attr interpolationmode none
+attr title "the total time spent in delay nodes by arrived jobs, mean"
+attr unit s
+scalar BatchQueueWV.sink totalDelayTime:max 0
+attr interpolationmode none
+attr title "the total time spent in delay nodes by arrived jobs, max"
+attr unit s
+scalar BatchQueueWV.sink totalQueueingTime:mean 0
+attr interpolationmode none
+attr title "the total time spent in queues by arrived jobs, mean"
+attr unit s
+scalar BatchQueueWV.sink totalQueueingTime:max 0
+attr interpolationmode none
+attr title "the total time spent in queues by arrived jobs, max"
+attr unit s
+scalar BatchQueueWV.sink lifeTime:mean 1
+attr interpolationmode none
+attr title "lifetime of arrived jobs, mean"
+attr unit s
+scalar BatchQueueWV.sink lifeTime:max 1
+attr interpolationmode none
+attr title "lifetime of arrived jobs, max"
+attr unit s
+scalar BatchQueueWV.queue queueingTime:mean nan
+attr interpolationmode none
+attr title "queueing time at dequeue, mean"
+attr unit s
+scalar BatchQueueWV.queue queueingTime:max nan
+attr interpolationmode none
+attr title "queueing time at dequeue, max"
+attr unit s
+scalar BatchQueueWV.queue queueLength:timeavg 0
+attr interpolationmode sample-hold
+attr title "queue length, timeavg"
+scalar BatchQueueWV.queue queueLength:max 0
+attr interpolationmode sample-hold
+attr title "queue length, max"
+scalar BatchQueueWV.queue dropped:count 0
+attr interpolationmode none
+attr title "drop event, count"
+scalar BatchQueueWV.server busy:timeavg 0.16257676714771
+attr interpolationmode sample-hold
+attr title "server busy state, timeavg"
+scalar BatchQueueWV.source created:last 2
+attr interpolationmode none
+attr title "the number of jobs created, last"
+
