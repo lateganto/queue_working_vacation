@@ -13,21 +13,16 @@
 
 namespace queueing {
 
-	SelectionStrategy::SelectionStrategy(cSimpleModule *module,
-			bool selectOnInGate) {
+	SelectionStrategy::SelectionStrategy(cSimpleModule *module, bool selectOnInGate) {
 		hostModule = module;
 		isInputGate = selectOnInGate;
-		gateSize =
-				isInputGate ?
-						hostModule->gateSize("in") :
-						hostModule->gateSize("out");
+		gateSize = isInputGate ? hostModule->gateSize("in") : hostModule->gateSize("out");
 	}
 
 	SelectionStrategy::~SelectionStrategy() {
 	}
 
-	SelectionStrategy *SelectionStrategy::create(const char *algName,
-			cSimpleModule *module, bool selectOnInGate) {
+	SelectionStrategy *SelectionStrategy::create(const char *algName, cSimpleModule *module, bool selectOnInGate) {
 		SelectionStrategy *strategy = nullptr;
 
 		if (strcmp(algName, "priority") == 0) {
@@ -37,11 +32,9 @@ namespace queueing {
 		} else if (strcmp(algName, "roundRobin") == 0) {
 			strategy = new RoundRobinSelectionStrategy(module, selectOnInGate);
 		} else if (strcmp(algName, "shortestQueue") == 0) {
-			strategy = new ShortestQueueSelectionStrategy(module,
-					selectOnInGate);
+			strategy = new ShortestQueueSelectionStrategy(module, selectOnInGate);
 		} else if (strcmp(algName, "longestQueue") == 0) {
-			strategy = new LongestQueueSelectionStrategy(module,
-					selectOnInGate);
+			strategy = new LongestQueueSelectionStrategy(module, selectOnInGate);
 		}
 
 		return strategy;
@@ -59,14 +52,12 @@ namespace queueing {
 		IServer *server = dynamic_cast<IServer *>(module);
 		if (server != nullptr) return server->isIdle();
 
-		throw cRuntimeError(
-				"Only IPassiveQueue and IServer is supported by this Strategy");
+		throw cRuntimeError("Only IPassiveQueue and IServer is supported by this Strategy");
 	}
 
 // --------------------------------------------------------------------------------------------
 
-	PrioritySelectionStrategy::PrioritySelectionStrategy(cSimpleModule *module,
-			bool selectOnInGate) :
+	PrioritySelectionStrategy::PrioritySelectionStrategy(cSimpleModule *module, bool selectOnInGate) :
 			SelectionStrategy(module, selectOnInGate) {
 	}
 
@@ -81,8 +72,7 @@ namespace queueing {
 
 // --------------------------------------------------------------------------------------------
 
-	RandomSelectionStrategy::RandomSelectionStrategy(cSimpleModule *module,
-			bool selectOnInGate) :
+	RandomSelectionStrategy::RandomSelectionStrategy(cSimpleModule *module, bool selectOnInGate) :
 			SelectionStrategy(module, selectOnInGate) {
 	}
 
@@ -95,16 +85,14 @@ namespace queueing {
 		int rnd = hostModule->intuniform(1, noOfSelectables);
 
 		for (int i = 0; i < gateSize; i++)
-			if (isSelectable(selectableGate(i)->getOwnerModule())
-					&& (--rnd == 0)) return i;
+			if (isSelectable(selectableGate(i)->getOwnerModule()) && (--rnd == 0)) return i;
 
 		return -1;
 	}
 
 // --------------------------------------------------------------------------------------------
 
-	RoundRobinSelectionStrategy::RoundRobinSelectionStrategy(
-			cSimpleModule *module, bool selectOnInGate) :
+	RoundRobinSelectionStrategy::RoundRobinSelectionStrategy(cSimpleModule *module, bool selectOnInGate) :
 			SelectionStrategy(module, selectOnInGate) {
 		lastIndex = -1;
 	}
@@ -113,7 +101,7 @@ namespace queueing {
 		// return the smallest selectable index
 		for (int i = 0; i < gateSize; ++i) {
 			lastIndex = (lastIndex + 1) % gateSize;
-			if (isSelectable (selectableGate(lastIndex)->getOwnerModule()))return lastIndex;
+			if (isSelectable(selectableGate(lastIndex)->getOwnerModule())) return lastIndex;
 		}
 
 		// if none of them is selectable return an invalid no.
@@ -122,8 +110,7 @@ namespace queueing {
 
 // --------------------------------------------------------------------------------------------
 
-	ShortestQueueSelectionStrategy::ShortestQueueSelectionStrategy(
-			cSimpleModule *module, bool selectOnInGate) :
+	ShortestQueueSelectionStrategy::ShortestQueueSelectionStrategy(cSimpleModule *module, bool selectOnInGate) :
 			SelectionStrategy(module, selectOnInGate) {
 	}
 
@@ -144,8 +131,7 @@ namespace queueing {
 
 // --------------------------------------------------------------------------------------------
 
-	LongestQueueSelectionStrategy::LongestQueueSelectionStrategy(
-			cSimpleModule *module, bool selectOnInGate) :
+	LongestQueueSelectionStrategy::LongestQueueSelectionStrategy(cSimpleModule *module, bool selectOnInGate) :
 			SelectionStrategy(module, selectOnInGate) {
 	}
 

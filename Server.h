@@ -17,42 +17,48 @@ namespace queueing {
 	class Job;
 	class SelectionStrategy;
 
-/**
- * The queue server. It cooperates with several Queues that which queue up
- * the jobs, and send them to Server on request.
- *
- * @see PassiveQueue
- */
-class QUEUEING_API Server : public cSimpleModule, public IServer
-{
-	private:
-	simsignal_t busySignal;
-	bool allocated;
+	/**
+	 * The queue server. It cooperates with several Queues that which queue up
+	 * the jobs, and send them to Server on request.
+	 *
+	 * @see PassiveQueue
+	 */
+	class QUEUEING_API Server: public cSimpleModule, public IServer {
+		private:
+			simsignal_t busySignal;
+			bool allocated;
 
-	SelectionStrategy *selectionStrategy;
+			//added variables
+			bool vacation;
+			cMessage *endVacationMsg;
+			simsignal_t vacationSignal;
 
-	Job *jobServiced;
-	cMessage *endServiceMsg;
+			SelectionStrategy *selectionStrategy;
 
-	public:
-	Server();
-	virtual ~Server();
+			Job *jobServiced;
+			cMessage *endServiceMsg;
 
-	protected:
-	virtual void initialize() override;
-	virtual int numInitStages() const override {return 2;}
-	virtual void handleMessage(cMessage *msg) override;
-	virtual void refreshDisplay() const override;
-	virtual void finish() override;
+		public:
+			Server();
+			virtual ~Server();
 
-	public:
-	virtual bool isIdle() override;
-	virtual void allocate() override;
-};
+		protected:
+			virtual void initialize() override;
+			virtual int numInitStages() const override {
+				return 2;
+			}
+			virtual void handleMessage(cMessage *msg) override;
+			virtual void refreshDisplay() const override;
+			virtual void finish() override;
+
+		public:
+			virtual bool isIdle() override;
+			virtual void allocate() override;
+	};
 
 }
 ;
- //namespace
+//namespace
 
 #endif
 
