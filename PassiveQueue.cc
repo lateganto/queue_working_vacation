@@ -34,10 +34,8 @@ namespace queueing {
 
 		fifo = par("fifo");
 
-		selectionStrategy = SelectionStrategy::create(par("sendingAlgorithm"),
-				this, false);
-		if (!selectionStrategy) throw cRuntimeError(
-				"invalid selection strategy");
+		selectionStrategy = SelectionStrategy::create(par("sendingAlgorithm"), this, false);
+		if (!selectionStrategy) throw cRuntimeError("invalid selection strategy");
 	}
 
 	void PassiveQueue::handleMessage(cMessage *msg) {
@@ -62,8 +60,7 @@ namespace queueing {
 		} else if (length() == 0) {
 			// send through without queueing
 			sendJob(job, k);
-		} else throw cRuntimeError(
-				"This should not happen. Queue is NOT empty and there is an IDLE server attached to us.");
+		} else throw cRuntimeError("This should not happen. Queue is NOT empty and there is an IDLE server attached to us.");
 	}
 
 	void PassiveQueue::refreshDisplay() const {

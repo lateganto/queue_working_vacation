@@ -49,6 +49,8 @@ namespace queueing {
 	void Server::handleMessage(cMessage *msg) {
 		if (msg == endServiceMsg) {  //processed a job
 
+
+			/*ADDED
 			//check if queue is empty
 			cGate *gate = selectionStrategy->selectableGate(0); //select input gate of the module "Server" (that conduct to "Queue")
 			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //start vacation if the queue is empty
@@ -60,6 +62,7 @@ namespace queueing {
 					scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
 				}
 			}
+			//ADDED*/
 
 			ASSERT(jobServiced != nullptr);
 			ASSERT(allocated);
@@ -77,23 +80,38 @@ namespace queueing {
 				cGate *gate = selectionStrategy->selectableGate(k);
 				check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->request(gate->getIndex());
 			}
-		} else if (msg == endVacationMsg) { //end of the vacation
+		} else if (msg == endVacationMsg) { //end of the vacation (added)
 			EV << "The server is running in normal mode!\n";
 			bubble("Normal mode");
 			vacation = false;
 			emit(vacationSignal, false);
-		} else {
+		} else {  //arrive a Job
 			if (!allocated) error("job arrived, but the sender did not call allocate() previously");
 			if (jobServiced) throw cRuntimeError("a new job arrived while already servicing one");
 
+			//ADDED
+			//check if queue is empty
+			cGate *gate = selectionStrategy->selectableGate(0); //select input gate of the module "Server" (that conduct to "Queue")
+			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //start vacation if the queue is empty
+				if (!vacation) { //if the server is already in vacation do not start another one
+					EV << "The server is running in vacation mode!\n";
+					bubble("Vacation");
+					vacation = true;
+					emit(vacationSignal, true);
+					scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
+				}
+			}
+			//ADDED
+
 			jobServiced = check_and_cast<Job *>(msg);
 
-			//added
+			//ADDED
 			simtime_t serviceTime;
 			if (vacation)
 				serviceTime = par("serviceTimeVacation");
 			else
 				serviceTime = par("serviceTimeBusy");
+			//ADDED
 
 			scheduleAt(simTime() + serviceTime, endServiceMsg);
 			emit(busySignal, true);

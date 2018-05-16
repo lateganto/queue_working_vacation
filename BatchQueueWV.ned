@@ -24,7 +24,6 @@ network BatchQueueWV
             @display("p=215,79");
         }
         server: Server {
-
             @display("p=359,79");
         }
         source: Source {
