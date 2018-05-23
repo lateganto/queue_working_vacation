@@ -28,10 +28,11 @@ namespace queueing {
 			simsignal_t busySignal;
 			bool allocated;
 
-			//added variables
+			////////////////////ADDED////////////////////
 			bool vacation;
 			cMessage *endVacationMsg;
 			simsignal_t vacationSignal;
+			////////////////////ADDED////////////////////
 
 			SelectionStrategy *selectionStrategy;
 

@@ -50,6 +50,7 @@ namespace queueing {
 	void Source::handleMessage(cMessage *msg) {
 		ASSERT(msg->isSelfMessage());
 
+		////////////////////ADDED////////////////////
 		scheduleAt(simTime() + par("interArrivalTime").doubleValue(), msg);
 
 		int n = par("numJobsBatch");
@@ -57,6 +58,8 @@ namespace queueing {
 			Job *job = createJob();
 			send(job, "out");
 		}
+		////////////////////ADDED////////////////////
+
 	}
 
 //----

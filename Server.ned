@@ -24,12 +24,13 @@ simple Server
         string fetchingAlgorithm @enum("priority","random","roundRobin","longestQueue") = default("priority");
              // how the next job will be choosen from the attached queues
 
-        //added
+        ////////////////////ADDED////////////////////
         @signal[vacation](type="bool");
         @statistic[vacation](title="server vacation state"; record=vector?,timeavg; interpolationmode=sample-hold);
         volatile double serviceTimeBusy @unit(s);		//service time durig normal period  
         volatile double serviceTimeVacation @unit(s);	//service time during vacation
         volatile double vacationPeriod @unit(s);		//duration of the vacation
+        ////////////////////ADDED////////////////////
 
     gates:
         input in[];

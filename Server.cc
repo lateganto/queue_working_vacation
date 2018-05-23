@@ -33,11 +33,12 @@ namespace queueing {
 		busySignal = registerSignal("busy");
 		emit(busySignal, false);
 
-		//added
+		////////////////////ADDED////////////////////
 		vacationSignal = registerSignal("vacation"); //emitted when the server goes in vacation
 		emit(vacationSignal, false);
 		endVacationMsg = new cMessage("end-vacation");
 		vacation = false;
+		////////////////////ADDED////////////////////
 
 		endServiceMsg = new cMessage("end-service");
 		jobServiced = nullptr;
@@ -47,11 +48,10 @@ namespace queueing {
 	}
 
 	void Server::handleMessage(cMessage *msg) {
-		if (msg == endServiceMsg) {  //processed a job
+		if (msg == endServiceMsg) {  //server has processed a job
 
-
-			/*ADDED
-			//check if queue is empty
+			////////////////////ADDED////////////////////
+			//when the server finished to serve a Job check if queue is empty
 			cGate *gate = selectionStrategy->selectableGate(0); //select input gate of the module "Server" (that conduct to "Queue")
 			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //start vacation if the queue is empty
 				if (!vacation) { //if the server is already in vacation do not start another one
@@ -62,7 +62,7 @@ namespace queueing {
 					scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
 				}
 			}
-			//ADDED*/
+			////////////////////ADDED////////////////////
 
 			ASSERT(jobServiced != nullptr);
 			ASSERT(allocated);
@@ -80,38 +80,25 @@ namespace queueing {
 				cGate *gate = selectionStrategy->selectableGate(k);
 				check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->request(gate->getIndex());
 			}
-		} else if (msg == endVacationMsg) { //end of the vacation (added)
+		}
+		////////////////////ADDED////////////////////
+		else if (msg == endVacationMsg) { //end of the vacation
 			EV << "The server is running in normal mode!\n";
 			bubble("Normal mode");
 			vacation = false;
 			emit(vacationSignal, false);
+		////////////////////ADDED////////////////////
 		} else {  //arrive a Job
 			if (!allocated) error("job arrived, but the sender did not call allocate() previously");
 			if (jobServiced) throw cRuntimeError("a new job arrived while already servicing one");
 
-			//ADDED
-			//check if queue is empty
-			cGate *gate = selectionStrategy->selectableGate(0); //select input gate of the module "Server" (that conduct to "Queue")
-			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //start vacation if the queue is empty
-				if (!vacation) { //if the server is already in vacation do not start another one
-					EV << "The server is running in vacation mode!\n";
-					bubble("Vacation");
-					vacation = true;
-					emit(vacationSignal, true);
-					scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
-				}
-			}
-			//ADDED
-
 			jobServiced = check_and_cast<Job *>(msg);
 
-			//ADDED
+			////////////////////ADDED////////////////////
 			simtime_t serviceTime;
-			if (vacation)
-				serviceTime = par("serviceTimeVacation");
-			else
-				serviceTime = par("serviceTimeBusy");
-			//ADDED
+			if (vacation) serviceTime = par("serviceTimeVacation");
+			else serviceTime = par("serviceTimeBusy");
+			////////////////////ADDED////////////////////
 
 			scheduleAt(simTime() + serviceTime, endServiceMsg);
 			emit(busySignal, true);
