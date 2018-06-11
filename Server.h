@@ -54,6 +54,7 @@ namespace queueing {
 
 		public:
 			virtual bool isIdle() override;
+			virtual bool isVacation() override;
 			virtual void allocate() override;
 	};
 

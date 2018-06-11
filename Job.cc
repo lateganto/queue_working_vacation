@@ -16,10 +16,10 @@ namespace queueing {
 	Job::Job(const char *name, int kind, JobList *jobList) :
 			Job_Base(name, kind) {
 		parent = nullptr;
-		if (jobList == nullptr && JobList::getDefaultInstance() != nullptr) jobList =
-				JobList::getDefaultInstance();
+		if (jobList == nullptr && JobList::getDefaultInstance() != nullptr) jobList = JobList::getDefaultInstance();
 		this->jobList = jobList;
 		if (jobList != nullptr) jobList->registerJob(this);
+		processedVacation = false;
 	}
 
 	Job::Job(const Job& job) {
@@ -28,6 +28,7 @@ namespace queueing {
 		parent = nullptr;
 		jobList = job.jobList;
 		if (jobList != nullptr) jobList->registerJob(this);
+		processedVacation = job.processedVacation;
 	}
 
 	Job::~Job() {
@@ -44,6 +45,14 @@ namespace queueing {
 		return *this;
 	}
 
+	bool Job::getProcessedVacation() {
+		return processedVacation;
+	}
+
+	void Job::setProcessedVacation(bool processedVacation) {
+		this->processedVacation = processedVacation;
+	}
+
 	Job *Job::getParent() {
 		return parent;
 	}
@@ -57,8 +66,7 @@ namespace queueing {
 	}
 
 	Job *Job::getChild(int k) {
-		if (k < 0 || k >= (int) children.size()) throw cRuntimeError(this,
-				"child index %d out of bounds", k);
+		if (k < 0 || k >= (int) children.size()) throw cRuntimeError(this, "child index %d out of bounds", k);
 		return children[k];
 	}
 
@@ -68,9 +76,7 @@ namespace queueing {
 
 	void Job::addChild(Job *child) {
 		child->setParent(this);
-		ASSERT(
-				std::find(children.begin(), children.end(), child)
-						== children.end());
+		ASSERT(std::find(children.begin(), children.end(), child) == children.end());
 		children.push_back(child);
 	}
 
@@ -79,8 +85,7 @@ namespace queueing {
 	}
 
 	void Job::childDeleted(Job *child) {
-		std::vector<Job *>::iterator it = std::find(children.begin(),
-				children.end(), child);
+		std::vector<Job *>::iterator it = std::find(children.begin(), children.end(), child);
 		ASSERT(it != children.end());
 		children.erase(it);
 	}

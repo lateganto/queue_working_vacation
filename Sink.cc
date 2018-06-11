@@ -23,6 +23,11 @@ namespace queueing {
 		delaysVisitedSignal = registerSignal("delaysVisited");
 		generationSignal = registerSignal("generation");
 		keepJobs = par("keepJobs");
+
+		//ADDED
+		sojournTimeSignal = registerSignal("sojournTime");
+		sojournTimeSignalVacation = registerSignal("sojournTimeVacation");
+		sojournTimeSignalBusy = registerSignal("sojournTimeBusy");
 	}
 
 	void Sink::handleMessage(cMessage *msg) {
@@ -36,6 +41,16 @@ namespace queueing {
 		emit(totalDelayTimeSignal, job->getTotalDelayTime());
 		emit(delaysVisitedSignal, job->getDelayCount());
 		emit(generationSignal, job->getGeneration());
+
+		////////////////////ADDED////////////////////
+		simtime_t d = job->getTotalQueueingTime() + job->getTotalServiceTime();
+		emit(sojournTimeSignal, d);
+		if(job->getProcessedVacation()) {
+			emit(sojournTimeSignalVacation, d);
+		} else {
+			emit(sojournTimeSignalBusy, d);
+		}
+		////////////////////ADDED////////////////////
 
 		if (!keepJobs) delete msg;
 	}

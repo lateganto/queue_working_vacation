@@ -26,6 +26,11 @@ namespace queueing {
 			simsignal_t totalDelayTimeSignal;
 			simsignal_t delaysVisitedSignal;
 			simsignal_t generationSignal;
+			//ADDED
+			simsignal_t sojournTimeSignal;
+			simsignal_t sojournTimeSignalVacation;
+			simsignal_t sojournTimeSignalBusy;
+
 			bool keepJobs;
 
 		protected:

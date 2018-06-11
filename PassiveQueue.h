@@ -28,6 +28,11 @@ namespace queueing {
 			simsignal_t queueLengthSignal;
 			simsignal_t queueingTimeSignal;
 
+			////////////////////ADDED////////////////////
+			simsignal_t queueLengthSignalVacation; //signal for the queue length when the server is in vacation
+			simsignal_t queueLengthSignalBusy;  //signal for the queue length when the server is busy
+			////////////////////ADDED////////////////////
+
 			bool fifo;
 			int capacity;
 			cQueue queue;

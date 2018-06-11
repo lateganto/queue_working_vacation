@@ -21,6 +21,7 @@ namespace queueing {
 		jobServiced = nullptr;
 		endServiceMsg = nullptr;
 		allocated = false;
+		vacation = false;
 	}
 
 	Server::~Server() {
@@ -35,9 +36,9 @@ namespace queueing {
 
 		////////////////////ADDED////////////////////
 		vacationSignal = registerSignal("vacation"); //emitted when the server goes in vacation
-		emit(vacationSignal, false);
+		emit(vacationSignal, vacation);
 		endVacationMsg = new cMessage("end-vacation");
-		vacation = false;
+		//vacation = false;
 		////////////////////ADDED////////////////////
 
 		endServiceMsg = new cMessage("end-service");
@@ -58,7 +59,7 @@ namespace queueing {
 					EV << "The server is running in vacation mode!\n";
 					bubble("Vacation");
 					vacation = true;
-					emit(vacationSignal, true);
+					emit(vacationSignal, vacation);
 					scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
 				}
 			}
@@ -86,9 +87,9 @@ namespace queueing {
 			EV << "The server is running in normal mode!\n";
 			bubble("Normal mode");
 			vacation = false;
-			emit(vacationSignal, false);
+			emit(vacationSignal, vacation);
 		////////////////////ADDED////////////////////
-		} else {  //arrive a Job
+		} else {  //arrived a Job
 			if (!allocated) error("job arrived, but the sender did not call allocate() previously");
 			if (jobServiced) throw cRuntimeError("a new job arrived while already servicing one");
 
@@ -96,8 +97,14 @@ namespace queueing {
 
 			////////////////////ADDED////////////////////
 			simtime_t serviceTime;
-			if (vacation) serviceTime = par("serviceTimeVacation");
-			else serviceTime = par("serviceTimeBusy");
+			if (vacation) {
+				jobServiced->setProcessedVacation(true);
+				serviceTime = par("serviceTimeVacation");
+			}
+			else {
+				jobServiced->setProcessedVacation(false);
+				serviceTime = par("serviceTimeBusy");
+			}
 			////////////////////ADDED////////////////////
 
 			scheduleAt(simTime() + serviceTime, endServiceMsg);
@@ -114,6 +121,10 @@ namespace queueing {
 
 	bool Server::isIdle() {
 		return !allocated; // we are idle if nobody has allocated us for processing
+	}
+
+	bool Server::isVacation() {
+		return vacation;
 	}
 
 	void Server::allocate() {

@@ -37,6 +37,9 @@ namespace queueing {
 	 */
 	class QUEUEING_API Job: public Job_Base {
 			friend class JobList;
+
+		private:
+			bool processedVacation;
 		protected:
 			Job *parent;
 			std::vector<Job*> children;
@@ -45,6 +48,10 @@ namespace queueing {
 			virtual void parentDeleted();
 			virtual void childDeleted(Job *child);
 		public:
+
+			virtual bool getProcessedVacation();
+			virtual void setProcessedVacation(bool processedVacation);
+
 			/**
 			 * Creates a job with the given name, message kind, and jobList. If
 			 * jobList==nullptr, the default one (or none if none exist) will be chosen.

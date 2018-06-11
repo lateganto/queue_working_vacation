@@ -29,6 +29,13 @@ namespace queueing {
 		queueLengthSignal = registerSignal("queueLength");
 		emit(queueLengthSignal, 0);
 
+		////////////////////ADDED////////////////////
+		queueLengthSignalBusy = registerSignal("queueLengthBusy");
+		queueLengthSignalVacation = registerSignal("queueLengthVacation");
+		emit(queueLengthSignalBusy, 0);
+		emit(queueLengthSignalVacation, 0);
+		////////////////////ADDED////////////////////
+
 		capacity = par("capacity");
 		queue.setName("queue");
 
@@ -40,7 +47,7 @@ namespace queueing {
 
 	void PassiveQueue::handleMessage(cMessage *msg) {
 		Job *job = check_and_cast<Job *>(msg);
-		job->setTimestamp();
+		job->setTimestamp();  //used to calculate the total queueing time, sets the timestamp to the current simulation time
 
 		// check for container capacity
 		if (capacity >= 0 && queue.getLength() >= capacity) {
@@ -55,7 +62,18 @@ namespace queueing {
 		if (k < 0) {
 			// enqueue if no idle server found
 			queue.insert(job);
+
 			emit(queueLengthSignal, length());
+
+			////////////////////ADDED////////////////////
+			cGate *out = gate("out", 0);  //select output gate of the module "PassiveQueue" (that conduct to "Server")
+			if (check_and_cast<IServer *>(out->getPathEndGate()->getOwnerModule())->isVacation()) {
+				emit(queueLengthSignalVacation, length());
+			} else {
+				emit(queueLengthSignalBusy, length());
+			}
+			////////////////////ADDED////////////////////
+
 			job->setQueueCount(job->getQueueCount() + 1);
 		} else if (length() == 0) {
 			// send through without queueing
@@ -86,7 +104,17 @@ namespace queueing {
 			// FIXME this may have bad performance as remove uses linear search
 			queue.remove(job);
 		}
+
 		emit(queueLengthSignal, length());
+
+		////////////////////ADDED////////////////////
+		cGate *out = gate("out", gateIndex);
+		if (check_and_cast<IServer *>(out->getPathEndGate()->getOwnerModule())->isVacation()) {
+			emit(queueLengthSignalVacation, length());
+		} else {
+			emit(queueLengthSignalBusy, length());
+		}
+		////////////////////ADDED////////////////////
 
 		job->setQueueCount(job->getQueueCount()+1);
 		simtime_t d = simTime() - job->getTimestamp();
