@@ -35,10 +35,9 @@ namespace queueing {
 		emit(busySignal, false);
 
 		////////////////////ADDED////////////////////
-		vacationSignal = registerSignal("vacation"); //emitted when the server goes in vacation
-		emit(vacationSignal, vacation);
+		vacationPeriodSignal = registerSignal("vacationPeriod"); //emitted when the server goes in vacation
+		emit(vacationPeriodSignal, false);
 		endVacationMsg = new cMessage("end-vacation");
-		//vacation = false;
 		////////////////////ADDED////////////////////
 
 		endServiceMsg = new cMessage("end-service");
@@ -52,14 +51,15 @@ namespace queueing {
 		if (msg == endServiceMsg) {  //server has processed a job
 
 			////////////////////ADDED////////////////////
-			//when the server finished to serve a Job check if queue is empty
-			cGate *gate = selectionStrategy->selectableGate(0); //select input gate of the module "Server" (that conduct to "Queue")
-			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //start vacation if the queue is empty
+			//when the server finished to serve a Job checks if the queue is empty
+			cGate *gate = selectionStrategy->selectableGate(0); //select output gate of the module "Queue"
+			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //if the queue is empty server starts vacation
 				if (!vacation) { //if the server is already in vacation do not start another one
 					EV << "The server is running in vacation mode!\n";
 					bubble("Vacation");
 					vacation = true;
-					emit(vacationSignal, vacation);
+					emit(vacationPeriodSignal, true);
+					//emit(busyPeriodSignal, false);
 					scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
 				}
 			}
@@ -83,11 +83,17 @@ namespace queueing {
 			}
 		}
 		////////////////////ADDED////////////////////
-		else if (msg == endVacationMsg) { //end of the vacation
-			EV << "The server is running in normal mode!\n";
-			bubble("Normal mode");
-			vacation = false;
-			emit(vacationSignal, vacation);
+		else if (msg == endVacationMsg) { //message of end of the vacation
+			cGate *gate = selectionStrategy->selectableGate(0); //select input gate of the module "Server" (that conduct to "Queue")
+			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //the queue is still empty then return in vacation
+				EV << "The server starts another vacation!\n";
+				scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
+			} else {  //ends the vacation
+				EV << "The server is running in normal mode!\n";
+				bubble("Normal mode");
+				vacation = false;
+				emit(vacationPeriodSignal, false);
+			}
 		////////////////////ADDED////////////////////
 		} else {  //arrived a Job
 			if (!allocated) error("job arrived, but the sender did not call allocate() previously");
@@ -100,8 +106,7 @@ namespace queueing {
 			if (vacation) {
 				jobServiced->setProcessedVacation(true);
 				serviceTime = par("serviceTimeVacation");
-			}
-			else {
+			} else {
 				jobServiced->setProcessedVacation(false);
 				serviceTime = par("serviceTimeBusy");
 			}
@@ -123,9 +128,11 @@ namespace queueing {
 		return !allocated; // we are idle if nobody has allocated us for processing
 	}
 
+	////////////////////ADDED////////////////////
 	bool Server::isVacation() {
 		return vacation;
 	}
+	////////////////////ADDED////////////////////
 
 	void Server::allocate() {
 		allocated = true;

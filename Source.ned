@@ -30,7 +30,7 @@ simple Source
         double startTime @unit(s) = default(interArrivalTime); // when the module sends out the first job
         double stopTime @unit(s) = default(-1s); // when the module stops the job generation (-1 means no limit)
 
-        //added
+        ////////////////////ADDED////////////////////
         volatile int numJobsBatch = default(1);		//number of job in a batch
     gates:
         output out;

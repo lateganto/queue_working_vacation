@@ -27,8 +27,12 @@ namespace queueing {
 			;
 			// indicates whether the service is currently idle (ie. no processing is pending or in progress currently)
 			virtual bool isIdle() = 0;
+
+			////////////////////ADDED////////////////////
 			// indicates whether the server is in vacation or not
 			virtual bool isVacation() = 0;
+			////////////////////ADDED////////////////////
+
 			// notify the server that we want to allocate it for a job. after calling this we MUST send a job via the server's input gate
 			virtual void allocate() = 0;
 	};

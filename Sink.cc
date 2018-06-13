@@ -24,10 +24,11 @@ namespace queueing {
 		generationSignal = registerSignal("generation");
 		keepJobs = par("keepJobs");
 
-		//ADDED
+		////////////////////ADDED////////////////////
 		sojournTimeSignal = registerSignal("sojournTime");
 		sojournTimeSignalVacation = registerSignal("sojournTimeVacation");
 		sojournTimeSignalBusy = registerSignal("sojournTimeBusy");
+		////////////////////ADDED////////////////////
 	}
 
 	void Sink::handleMessage(cMessage *msg) {

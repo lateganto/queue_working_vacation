@@ -24,16 +24,16 @@ simple PassiveQueue
         @signal[queueLength](type="long");
         @signal[queueingTime](type="simtime_t");
         @statistic[dropped](title="drop event"; record=vector?,count; interpolationmode=none);
-        @statistic[queueLength](title="queue length"; record=vector,timeavg,stats,mean; interpolationmode=sample-hold);
+        @statistic[queueLength](title="queue length"; record=vector,timeavg,stats; interpolationmode=sample-hold);
         @statistic[queueingTime](title="queueing time at dequeue"; record=vector?,mean,max; unit=s; interpolationmode=none);
         @display("i=block/passiveq;q=queue");
         
-        //ADDED
+        ////////////////////ADDED////////////////////
         @signal[queueLengthBusy](type="long");
         @signal[queueLengthVacation](type="long");
-        @statistic[queueLengthBusy](title="queue length busy state"; record=vector,timeavg,stats,mean; interpolationmode=sample-hold);
-        @statistic[queueLengthVacation](title="queue length vacation state"; record=vector,timeavg,stats,mean; interpolationmode=sample-hold);
-        //ADDED
+        @statistic[queueLengthBusy](title="queue length busy state"; record=vector,timeavg,stats; interpolationmode=sample-hold);
+        @statistic[queueLengthVacation](title="queue length vacation state"; record=vector,timeavg,stats; interpolationmode=sample-hold);
+        ////////////////////ADDED////////////////////
 
         int capacity = default(-1);  // negative capacity means unlimited queue
         bool fifo = default(true);   // whether the module works as a queue (fifo=true) or a stack (fifo=false)

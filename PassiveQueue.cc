@@ -64,7 +64,6 @@ namespace queueing {
 			queue.insert(job);
 
 			emit(queueLengthSignal, length());
-
 			////////////////////ADDED////////////////////
 			cGate *out = gate("out", 0);  //select output gate of the module "PassiveQueue" (that conduct to "Server")
 			if (check_and_cast<IServer *>(out->getPathEndGate()->getOwnerModule())->isVacation()) {
@@ -106,7 +105,6 @@ namespace queueing {
 		}
 
 		emit(queueLengthSignal, length());
-
 		////////////////////ADDED////////////////////
 		cGate *out = gate("out", gateIndex);
 		if (check_and_cast<IServer *>(out->getPathEndGate()->getOwnerModule())->isVacation()) {
