@@ -45,6 +45,7 @@ namespace queueing {
 		return *this;
 	}
 
+	////////////////////ADDED////////////////////
 	bool Job::getProcessedVacation() {
 		return processedVacation;
 	}
@@ -52,6 +53,7 @@ namespace queueing {
 	void Job::setProcessedVacation(bool processedVacation) {
 		this->processedVacation = processedVacation;
 	}
+	////////////////////ADDED////////////////////
 
 	Job *Job::getParent() {
 		return parent;

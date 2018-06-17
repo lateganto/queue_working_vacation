@@ -29,7 +29,7 @@ namespace queueing {
 			bool allocated;
 
 			////////////////////ADDED////////////////////
-			bool vacation;  //indicate that the server is in vacation mode
+			bool vacation;  //indicates whether the server is in vacation mode
 			cMessage *endVacationMsg;  //message of end vacation
 			simsignal_t vacationPeriodSignal;  //used to collect statistics on the length of the busy and vacation period
 			////////////////////ADDED////////////////////

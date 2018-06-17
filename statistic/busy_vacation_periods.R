@@ -1,5 +1,6 @@
-#########################   BUSY/VACATION PERIOD   #########################
+library(gtools)
 
+#########################   BUSY/VACATION PERIOD   #########################
 directory = "Applications/omnetpp-5.3/samples/queueinglib3/statistic/"
 file = paste(directory, "busyVacationPeriod.csv", sep = "")
 

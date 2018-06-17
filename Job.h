@@ -39,7 +39,9 @@ namespace queueing {
 			friend class JobList;
 
 		private:
+			////////////////////ADDED////////////////////
 			bool processedVacation;
+			////////////////////ADDED////////////////////
 		protected:
 			Job *parent;
 			std::vector<Job*> children;
@@ -49,8 +51,10 @@ namespace queueing {
 			virtual void childDeleted(Job *child);
 		public:
 
+			////////////////////ADDED////////////////////
 			virtual bool getProcessedVacation();
 			virtual void setProcessedVacation(bool processedVacation);
+			////////////////////ADDED////////////////////
 
 			/**
 			 * Creates a job with the given name, message kind, and jobList. If

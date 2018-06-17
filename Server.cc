@@ -59,7 +59,6 @@ namespace queueing {
 					bubble("Vacation");
 					vacation = true;
 					emit(vacationPeriodSignal, true);
-					//emit(busyPeriodSignal, false);
 					scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
 				}
 			}
@@ -84,9 +83,10 @@ namespace queueing {
 		}
 		////////////////////ADDED////////////////////
 		else if (msg == endVacationMsg) { //message of end of the vacation
-			cGate *gate = selectionStrategy->selectableGate(0); //select input gate of the module "Server" (that conduct to "Queue")
+			cGate *gate = selectionStrategy->selectableGate(0); //select output gate of the module "Queue"
 			if (check_and_cast<IPassiveQueue *>(gate->getOwnerModule())->length() == 0) {  //the queue is still empty then return in vacation
 				EV << "The server starts another vacation!\n";
+				bubble("Another Vacation");
 				scheduleAt(simTime() + par("vacationPeriod").doubleValue(), endVacationMsg);
 			} else {  //ends the vacation
 				EV << "The server is running in normal mode!\n";
