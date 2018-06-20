@@ -1,8 +1,8 @@
 library(gtools)
 
 #########################   BUSY/VACATION PERIOD   #########################
-directory = "Applications/omnetpp-5.3/samples/queueinglib3/statistic/"
-file = paste(directory, "busyVacationPeriod.csv", sep = "")
+directory = "Applications/omnetpp-5.3/samples/queueinglib3/statistics/"
+file = paste(directory, "csv/", "busyVacationPeriod.csv", sep = "")
 
 busyVacationPeriods = read.csv(file, sep = ",", header = T, stringsAsFactors = F)
 vectorResults = busyVacationPeriods[busyVacationPeriods$type == "vector" | busyVacationPeriods$attrname=="iterationvars", ]

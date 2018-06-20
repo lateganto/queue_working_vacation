@@ -1,9 +1,9 @@
 library(gtools)
 
-#########################   VECTOR STATISTICS   #########################
+#########################   SOJOURN TIME   #########################
 vectorStatistic = function(directory, filename) {
   
-  file = paste(directory, filename, ".csv", sep="")
+  file = paste(directory, "csv/", filename, ".csv", sep="")
   simulationResults = read.csv(file, sep = ",", header = T, stringsAsFactors = F)
   vectorResults = simulationResults[simulationResults$type == "vector" | simulationResults$attrname=="iterationvars", ]
   
@@ -67,11 +67,8 @@ vectorStatistic = function(directory, filename) {
   write.table(m, file=paste(directory, "out/", filename, "_statistic.csv", sep=""), sep=",")
 }
 
-directory = "Applications/omnetpp-5.3/samples/queueinglib3/statistic/"
-filenames = c("queueLength", 
-              "queueLengthBusy", 
-              "queueLengthVacation", 
-              "sojournTime",
+directory = "Applications/omnetpp-5.3/samples/queueinglib3/statistics/"
+filenames = c("sojournTime",
               "sojournTimeBusy",
               "sojournTimeVacation")
 
