@@ -31,6 +31,11 @@ namespace queueing {
 			simsignal_t sojournTimeSignal;
 			simsignal_t sojournTimeSignalVacation;
 			simsignal_t sojournTimeSignalBusy;
+
+			simsignal_t serviceTimeSignalVacation;
+			simsignal_t serviceTimeSignalBusy;
+			simsignal_t queueingTimeSignalVacation;
+			simsignal_t queueingTimeSignalBusy;
 			////////////////////ADDED////////////////////
 
 			bool keepJobs;

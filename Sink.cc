@@ -28,6 +28,11 @@ namespace queueing {
 		sojournTimeSignal = registerSignal("sojournTime");
 		sojournTimeSignalVacation = registerSignal("sojournTimeVacation");
 		sojournTimeSignalBusy = registerSignal("sojournTimeBusy");
+
+		serviceTimeSignalBusy = registerSignal("serviceTimeBusy");
+		serviceTimeSignalVacation = registerSignal("serviceTimeVacation");
+		queueingTimeSignalBusy = registerSignal("queueingTimeBusy");
+		queueingTimeSignalVacation = registerSignal("queueingTimeVacation");
 		////////////////////ADDED////////////////////
 	}
 
@@ -48,8 +53,13 @@ namespace queueing {
 		emit(sojournTimeSignal, d);
 		if(job->getProcessedVacation()) {
 			emit(sojournTimeSignalVacation, d);
+			emit(queueingTimeSignalVacation, job->getTotalQueueingTime());
+			emit(serviceTimeSignalVacation, job->getTotalServiceTime());
+
 		} else {
 			emit(sojournTimeSignalBusy, d);
+			emit(queueingTimeSignalBusy, job->getTotalQueueingTime());
+			emit(serviceTimeSignalBusy, job->getTotalServiceTime());
 		}
 		////////////////////ADDED////////////////////
 

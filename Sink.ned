@@ -29,6 +29,11 @@ simple Sink
        	@signal[sojournTime](type="simtime_t");				//sojourn time of the job (queueing time + service time)
        	@signal[sojournTimeVacation](type="simtime_t");		//sojourn time of the job (queueing time + service time) for job serviced during vacation
        	@signal[sojournTimeBusy](type="simtime_t");			//sojourn time of the job (queueing time + service time) for job serviced during busy period
+       	
+       	@signal[queueingTimeBusy](type="simtime_t");		
+       	@signal[queueingTimeVacation](type="simtime_t");
+       	@signal[serviceTimeBusy](type="simtime_t");	
+        @signal[serviceTimeVacation](type="simtime_t");
         ////////////////////ADDED////////////////////
        
         @statistic[lifeTime](title="lifetime of arrived jobs"; unit=s; record=vector?,mean,max; interpolationmode=none);
@@ -41,8 +46,13 @@ simple Sink
         
         ////////////////////ADDED////////////////////
         @statistic[sojournTime](title="the total time spent in queues and service by arrived jobs"; unit=s; record=vector,stats; interpolationmode=none);
-        @statistic[sojournTimeVacation](title="the total time spent in queues and service by arrived jobs"; unit=s; record=vector,stats; interpolationmode=none);
-        @statistic[sojournTimeBusy](title="the total time spent in queues and service by arrived jobs"; unit=s; record=vector,stats; interpolationmode=none);
+        @statistic[sojournTimeVacation](title="the total time spent in queues and service by arrived jobs during vacation period"; unit=s; record=vector,stats; interpolationmode=none);
+        @statistic[sojournTimeBusy](title="the total time spent in queues and service by arrived jobs during busy period"; unit=s; record=vector,stats; interpolationmode=none);
+        
+        @statistic[queueingTimeBusy](title="the time spent in queue by arrived jobs during busy period"; unit=s; record=vector,stats; interpolationmode=none);
+        @statistic[queueingTimeVacation](title="the time spent in queue by arrived jobs during vacation period"; unit=s; record=vector,stats; interpolationmode=none);
+        @statistic[serviceTimeBusy](title="the time spent in service by arrived jobs during busy period"; unit=s; record=vector,stats; interpolationmode=none);
+        @statistic[serviceTimeVacation](title="the time spent in service by arrived jobs during vacation period"; unit=s; record=vector,stats; interpolationmode=none);
         ////////////////////ADDED////////////////////
         
         bool keepJobs = default(false); // whether to keep the received jobs till the end of simulation

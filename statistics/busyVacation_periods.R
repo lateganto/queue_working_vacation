@@ -14,8 +14,9 @@ vectorResults = vectorResults[mixedorder(vectorResults$run, decreasing=T), ]
 list = list()
 for(i in seq(1, length(vectorResults$run), by=2)) {
   attributes = vectorResults[i, 6]
-  vector = as.numeric(unlist(strsplit(vectorResults[i+1, "vectime"], " ")))
-  list[[length(list) + 1]] = list(attributes, vector)
+  vector_timestamps = as.numeric(unlist(strsplit(vectorResults[i+1, "vectime"], " ")))
+  vector_values = as.numeric(unlist(strsplit(vectorResults[i+1, "vecvalue"], " ")))
+  list[[length(list) + 1]] = list(attributes, vector_timestamps, vector_values)
 }
 
 #take the values of parameters as row names of the resul table
@@ -44,26 +45,40 @@ for(i in seq(1, length(list), by = 20)) {
     #vector with timestamps
     vector = list[[j]][[2]]
     
-    #compute vector distances for busy periods
-    busyPeriods = c()
-    for (pos in seq(1, length(vector) - 1, by = 2)) {
-      busyPeriods = c(busyPeriods, vector[[pos + 1]] - vector[[pos]])
-      #busyPeriods[[length(busyPeriods) + 1]] = vector[[pos + 1]] - vector[[pos]]
-    }
-    
-    #compute vector distances for busy periods
-    vacationPeriods = c()
-    for (pos in seq(2, length(vector) - 1, by = 2)) {
-      vacationPeriods = c(vacationPeriods, vector[[pos + 1]] - vector[[pos]])
-      #busyPeriods[[length(busyPeriods) + 1]] = vector[[pos + 1]] - vector[[pos]]
+    #check the first element of the values vector starts with a 0 or 1 (because there is a warm-up period)
+    if(list[[j]][[3]][[1]] == 0) { #starts with busy
+      #compute vector distances for busy periods
+      busyPeriods = c()
+      for (pos in seq(1, length(vector) - 1, by = 2)) {
+        busyPeriods = c(busyPeriods, vector[[pos + 1]] - vector[[pos]])
+        #busyPeriods[[length(busyPeriods) + 1]] = vector[[pos + 1]] - vector[[pos]]
+      }
+      
+      #compute vector distances for busy periods
+      vacationPeriods = c()
+      for (pos in seq(2, length(vector) - 1, by = 2)) {
+        vacationPeriods = c(vacationPeriods, vector[[pos + 1]] - vector[[pos]])
+        #busyPeriods[[length(busyPeriods) + 1]] = vector[[pos + 1]] - vector[[pos]]
+      }
+    } else { #starts with vacation
+      #compute vector distances for busy periods
+      busyPeriods = c()
+      for (pos in seq(2, length(vector) - 1, by = 2)) {
+        busyPeriods = c(busyPeriods, vector[[pos + 1]] - vector[[pos]])
+        #busyPeriods[[length(busyPeriods) + 1]] = vector[[pos + 1]] - vector[[pos]]
+      }
+      
+      #compute vector distances for busy periods
+      vacationPeriods = c()
+      for (pos in seq(1, length(vector) - 1, by = 2)) {
+        vacationPeriods = c(vacationPeriods, vector[[pos + 1]] - vector[[pos]])
+        #busyPeriods[[length(busyPeriods) + 1]] = vector[[pos + 1]] - vector[[pos]]
+      }
     }
     
     busyMeans = c(busyMeans, mean(busyPeriods))
     vacationMeans = c(vacationMeans, mean(vacationPeriods))
   }
-  
-  print(length(busyMeans))
-  print(length(vacationMeans))
   
   busy[z, 1] = round(mean(busyMeans), 6)
   busy[z, 2] = round(var(busyMeans), 6)
