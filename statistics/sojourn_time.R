@@ -25,7 +25,7 @@ vectorStatistic = function(directory, filename) {
   }
   
   #create a matrix with all stats for every combination of parameters
-  colnames = c("", "mean", "variance", "devStd", "errStd", "confInt90", "confInt95")
+  colnames = c("mean", "variance", "devStd", "errStd", "inf confInt90","sup confInt90", "inf confInt95", "sup confInt95")
   m = matrix(nrow = length(rownames), ncol = length(colnames))
   rownames(m) = rownames
   colnames(m) = colnames;
@@ -51,7 +51,8 @@ vectorStatistic = function(directory, filename) {
       sup = round(t[["conf.int"]][[2]], 6)
       #inf = mean(means) - (1.729 * sqrt(var(means))/sqrt(length(means)))
       #sup = mean(means) + (1.729 * sqrt(var(means))/sqrt(length(means)))
-      m[z, 5] = paste("[", inf, ", ", sup , "]", sep = "")
+      m[z, 5] = inf
+      m[z, 6] = sup
       
       #confidence interval 95%
       t = t.test(means, conf.level = 0.95)
@@ -59,7 +60,8 @@ vectorStatistic = function(directory, filename) {
       sup = round(t[["conf.int"]][[2]], 6)
       #inf = mean(means) - (2.093 * sqrt(var(means))/sqrt(length(means)))
       #sup = mean(means) + (2.093 * sqrt(var(means))/sqrt(length(means)))
-      m[z, 6] = paste("[", inf, ", ", sup , "]", sep = "")
+      m[z, 7] = inf
+      m[z, 8] = sup
       
       z = z + 1
   }

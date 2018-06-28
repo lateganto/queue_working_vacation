@@ -26,7 +26,7 @@ for(i in seq(1, length(list), by = 20)) {
 }
 
 #create a matrix with all stats for every combination of parameters
-colnames = c("mean", "variance", "devStd", "errStd", "confInt90", "confInt95")
+colnames = c("mean", "variance", "devStd", "errStd", "inf confInt90","sup confInt90", "inf confInt95", "sup confInt95")
 busy = matrix(nrow = length(rownames), ncol = length(colnames))
 vacation = matrix(nrow = length(rownames), ncol = length(colnames))
 rownames(busy) = rownames
@@ -94,25 +94,29 @@ for(i in seq(1, length(list), by = 20)) {
   t = t.test(busyMeans, conf.level = 0.90)
   inf = round(t[["conf.int"]][[1]], 6)
   sup = round(t[["conf.int"]][[2]], 6)
-  busy[z, 5] = paste("[", inf, ", ", sup , "]", sep = "")
+  busy[z, 5] = inf
+  busy[z, 6] = sup
   
   #BUSY confidence interval 95%
   t = t.test(busyMeans, conf.level = 0.95)
   inf = round(t[["conf.int"]][[1]], 6)
   sup = round(t[["conf.int"]][[2]], 6)
-  busy[z, 6] = paste("[", inf, ", ", sup , "]", sep = "")
+  busy[z, 7] = inf
+  busy[z, 8] = sup
   
   #VACATION confidence interval 90%
   t = t.test(vacationMeans, conf.level = 0.90)
   inf = round(t[["conf.int"]][[1]], 6)
   sup = round(t[["conf.int"]][[2]], 6)
-  vacation[z, 5] = paste("[", inf, ", ", sup , "]", sep = "")
+  vacation[z, 5] = inf
+  vacation[z, 6] = sup
   
   #VACATION confidence interval 95%
   t = t.test(vacationMeans, conf.level = 0.95)
   inf = round(t[["conf.int"]][[1]], 6)
   sup = round(t[["conf.int"]][[2]], 6)
-  vacation[z, 6] = paste("[", inf, ", ", sup , "]", sep = "")
+  vacation[z, 7] = inf
+  vacation[z, 8] = sup
   
   z = z + 1
 }
